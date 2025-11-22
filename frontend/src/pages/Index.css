@@ -1,0 +1,208 @@
+/* --- Global Variables & Theme Config --- */
+:root {
+  /* Default to Light Mode Variables */
+  --bg-primary: #ffffff;
+  --text-primary: #1e293b; /* Slate 800 */
+  --text-secondary: #64748b; /* Slate 500 */
+  
+  /* Blob Colors for Light Mode (Softer Pastels) */
+  --blob-1-color: rgba(45, 212, 191, 0.5); /* Teal */
+  --blob-2-color: rgba(139, 92, 246, 0.5); /* Violet */
+  --blob-3-color: rgba(59, 130, 246, 0.5); /* Blue */
+  
+  /* In light mode, 'multiply' creates a watercolor effect, 'normal' is safer */
+  --aurora-blend: normal; 
+  --aurora-opacity: 0.8;
+  
+  /* Button Styles */
+  --btn-bg: rgba(0, 0, 0, 0.05);
+  --btn-border: rgba(0, 0, 0, 0.1);
+  --btn-text: #334155;
+  --btn-hover-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] {
+  --bg-primary: #020617; /* Deep Slate/Black */
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8; /* Slate 400 */
+  
+  /* Blob Colors for Dark Mode (Vibrant Glows) */
+  --blob-1-color: rgba(45, 212, 191, 0.8);
+  --blob-2-color: rgba(139, 92, 246, 0.8);
+  --blob-3-color: rgba(59, 130, 246, 0.6);
+  
+  /* Screen blend mode makes them glow against dark backgrounds */
+  --aurora-blend: screen;
+  --aurora-opacity: 0.6;
+
+  /* Button Styles */
+  --btn-bg: rgba(255, 255, 255, 0.1);
+  --btn-border: rgba(255, 255, 255, 0.2);
+  --btn-text: #ffffff;
+  --btn-hover-bg: rgba(255, 255, 255, 0.2);
+}
+
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Main Wrapper */
+.aurora-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+/* --- The Aurora Background Effect --- */
+
+.aurora-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  /* Deep blur to merge shapes */
+  filter: blur(60px); 
+  opacity: var(--aurora-opacity);
+  pointer-events: none; /* Allows clicking through the background */
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  animation: drift 10s infinite ease-in-out alternate;
+  mix-blend-mode: var(--aurora-blend);
+  transition: background 0.5s ease;
+}
+
+/* Blob 1: Teal (Medical) */
+.blob-1 {
+  top: -10%;
+  left: -10%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, var(--blob-1-color) 0%, rgba(0, 0, 0, 0) 70%);
+  animation-duration: 12s;
+}
+
+/* Blob 2: Violet (AI) */
+.blob-2 {
+  bottom: -10%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, var(--blob-2-color) 0%, rgba(0, 0, 0, 0) 70%);
+  animation-duration: 15s;
+  animation-direction: alternate-reverse;
+}
+
+/* Blob 3: Blue (Trust) */
+.blob-3 {
+  top: 40%;
+  left: 40%;
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, var(--blob-3-color) 0%, rgba(0, 0, 0, 0) 70%);
+  animation-duration: 18s;
+}
+
+/* Animation Keyframes */
+@keyframes drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -50px) scale(1.1); }
+  100% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* --- Content Styling --- */
+
+.index-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.index-title {
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+/* Gradient Text: Remains vibrant in both themes */
+.gradient-text {
+  background: linear-gradient(to right, #2dd4bf, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.index-description {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  transition: color 0.3s ease;
+}
+
+/* Glassmorphism Button */
+.action-button {
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  
+  /* Theme-aware variables */
+  color: var(--btn-text);
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.action-button:hover {
+  background: var(--btn-hover-bg);
+  transform: translateY(-2px);
+  /* Use the teal color for glow in both modes */
+  box-shadow: 0 0 20px rgba(45, 212, 191, 0.3);
+  border-color: rgba(45, 212, 191, 0.5);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .index-title {
+    font-size: 2.5rem;
+  }
+  .index-description {
+    font-size: 1rem;
+  }
+}

@@ -1,0 +1,370 @@
+/* Navbar Styles */
+.navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .navbar {
+  background: rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.navbar-container {
+  max-width: 100%;
+  margin: 0;
+  padding: 0.75rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Dashboard Image (commented for now) */
+/* 
+.hero-dashboard-section {
+  margin-top: 2rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.hero-dashboard-section img {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: block;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px var(--shadow-color);
+  border: 2px solid var(--element-border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-dashboard-section img:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px var(--shadow-color);
+}
+*/
+
+/* Logo */
+.navbar-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  background: linear-gradient(135deg, #3b82f6, #22c55e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: all 0.3s ease;
+}
+
+.navbar-logo:hover {
+  filter: brightness(1.2);
+}
+
+/* Actions Container */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Nav Link */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+[data-theme="dark"] .nav-link:hover {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  background: transparent;
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b82f6;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.5);
+  transform: scale(1.05);
+}
+
+[data-theme="dark"] .theme-toggle {
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+/* Profile Menu */
+.profile-menu {
+  position: relative;
+}
+
+.profile-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(34, 197, 94, 0.1));
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #3b82f6;
+}
+
+.profile-button:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(34, 197, 94, 0.2));
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .profile-button {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(34, 197, 94, 0.15));
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+[data-theme="dark"] .profile-button:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(34, 197, 94, 0.25));
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.profile-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dropdown-item:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.dropdown-item:first-child:hover {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.dropdown-item:last-child:hover {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Profile Menu */
+.profile-menu {
+  position: relative;
+}
+
+.profile-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(34, 197, 94, 0.1));
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #3b82f6;
+}
+
+.profile-button:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(34, 197, 94, 0.2));
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .profile-button {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(34, 197, 94, 0.15));
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+[data-theme="dark"] .profile-button:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(34, 197, 94, 0.25));
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.profile-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dropdown-item:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.dropdown-item:first-child:hover {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.dropdown-item:last-child:hover {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Login Button */
+.login-button {
+  padding: 0.5rem 1.5rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(34, 197, 94, 0.1));
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-radius: 8px;
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(34, 197, 94, 0.2));
+  border-color: rgba(59, 130, 246, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .login-button {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(34, 197, 94, 0.15));
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+[data-theme="dark"] .login-button:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(34, 197, 94, 0.25));
+  border-color: rgba(34, 197, 94, 0.5);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .navbar-container {
+    padding: 1rem 1rem;
+  }
+  
+  .navbar-logo {
+    font-size: 1.25rem;
+  }
+  
+  .login-button {
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+  }
+}

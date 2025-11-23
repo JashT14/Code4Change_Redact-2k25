@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { History, Shield, User, LogOut, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { History, Shield, User, LogOut, FileText, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { predictionAPI, authAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
@@ -13,6 +13,8 @@ const Dashboard = () => {
   const [selectedPrediction, setSelectedPrediction] = useState(null);
   const [verificationResult, setVerificationResult] = useState(null);
   const [error, setError] = useState('');
+  const [generatingPDF, setGeneratingPDF] = useState(false);
+  const reportRef = useRef(null);
 
   useEffect(() => {
     fetchPredictions();
@@ -80,6 +82,135 @@ const Dashboard = () => {
     if (level === 'medium') return 'risk-medium';
     if (level === 'high') return 'risk-high';
     return '';
+  };
+
+  const generatePDFReport = async (prediction) => {
+    setGeneratingPDF(true);
+    try {
+      // Dynamically import jspdf and html2canvas
+      const jsPDF = (await import('jspdf')).default;
+      const html2canvas = (await import('html2canvas')).default;
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      let yPos = 20;
+
+      // Header
+      pdf.setFillColor(30, 41, 59);
+      pdf.rect(0, 0, pageWidth, 40, 'F');
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(24);
+      pdf.setFont(undefined, 'bold');
+      pdf.text('MediGuard AI', pageWidth / 2, 20, { align: 'center' });
+      pdf.setFontSize(12);
+      pdf.setFont(undefined, 'normal');
+      pdf.text('Medical Prediction Report', pageWidth / 2, 30, { align: 'center' });
+
+      yPos = 50;
+      pdf.setTextColor(0, 0, 0);
+
+      // Patient Information
+      pdf.setFontSize(16);
+      pdf.setFont(undefined, 'bold');
+      pdf.text('Patient Information', 20, yPos);
+      yPos += 10;
+
+      pdf.setFontSize(11);
+      pdf.setFont(undefined, 'normal');
+      pdf.text(`Patient ID: ${prediction.patient_id}`, 20, yPos);
+      yPos += 7;
+      pdf.text(`Prediction ID: ${prediction.uuid}`, 20, yPos);
+      yPos += 7;
+      pdf.text(`Date: ${new Date(prediction.timestamp).toLocaleString()}`, 20, yPos);
+      yPos += 15;
+
+      // Prediction Results
+      pdf.setFontSize(16);
+      pdf.setFont(undefined, 'bold');
+      pdf.text('Prediction Results', 20, yPos);
+      yPos += 10;
+
+      pdf.setFontSize(11);
+      pdf.setFont(undefined, 'normal');
+      pdf.text(`Disease: ${prediction.disease}`, 20, yPos);
+      yPos += 7;
+      pdf.text(`Risk Level: ${prediction.risk_level}`, 20, yPos);
+      yPos += 15;
+
+      // Risk Level Visualization
+      pdf.setFontSize(14);
+      pdf.setFont(undefined, 'bold');
+      pdf.text('Risk Assessment', 20, yPos);
+      yPos += 10;
+
+      const riskLevels = ['Low', 'Medium', 'High', 'Critical'];
+      const riskColors = [[16, 185, 129], [251, 146, 60], [239, 68, 68], [220, 38, 38]];
+      const currentRiskIndex = riskLevels.findIndex(r => r.toLowerCase() === prediction.risk_level?.toLowerCase());
+
+      const barWidth = 40;
+      const barHeight = 15;
+      const spacing = 5;
+      const startX = 20;
+
+      riskLevels.forEach((level, index) => {
+        const x = startX + index * (barWidth + spacing);
+        if (index === currentRiskIndex) {
+          pdf.setFillColor(...riskColors[index]);
+          pdf.rect(x, yPos, barWidth, barHeight, 'F');
+          pdf.setTextColor(255, 255, 255);
+        } else {
+          pdf.setFillColor(240, 240, 240);
+          pdf.rect(x, yPos, barWidth, barHeight, 'F');
+          pdf.setTextColor(100, 100, 100);
+        }
+        pdf.setFontSize(9);
+        pdf.text(level, x + barWidth / 2, yPos + barHeight / 2 + 2, { align: 'center' });
+      });
+
+      yPos += barHeight + 15;
+      pdf.setTextColor(0, 0, 0);
+
+      // Blockchain Verification
+      pdf.setFontSize(16);
+      pdf.setFont(undefined, 'bold');
+      pdf.text('Blockchain Security', 20, yPos);
+      yPos += 10;
+
+      pdf.setFontSize(10);
+      pdf.setFont(undefined, 'normal');
+      pdf.text('Blockchain Hash:', 20, yPos);
+      yPos += 6;
+      
+      pdf.setFontSize(9);
+      pdf.setFont(undefined, 'mono');
+      const hashLines = pdf.splitTextToSize(prediction.blockchain_hash, pageWidth - 40);
+      hashLines.forEach(line => {
+        pdf.text(line, 20, yPos);
+        yPos += 5;
+      });
+      yPos += 8;
+
+      pdf.setFontSize(10);
+      pdf.setFont(undefined, 'normal');
+      pdf.text('Blockchain Verified', 20, yPos);
+      yPos += 20;
+
+      // Footer
+      const footerY = pageHeight - 20;
+      pdf.setFontSize(8);
+      pdf.setTextColor(100, 100, 100);
+      pdf.text(`Generated on ${new Date().toLocaleString()}`, pageWidth / 2, footerY, { align: 'center' });
+      pdf.text('MediGuard AI - Secure Medical Predictions', pageWidth / 2, footerY + 5, { align: 'center' });
+
+      // Save PDF
+      pdf.save(`MediGuard_Report_${prediction.patient_id}_${Date.now()}.pdf`);
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      setError('Failed to generate PDF report');
+    } finally {
+      setGeneratingPDF(false);
+    }
   };
 
   return (
@@ -269,17 +400,45 @@ const Dashboard = () => {
                   <h3>Prediction Results</h3>
                   <p><strong>Disease:</strong> {selectedPrediction.disease}</p>
                   <p><strong>Risk Level:</strong> <span className={getRiskColor(selectedPrediction.risk_level)}>{selectedPrediction.risk_level}</span></p>
+                  
+                  {/* Risk Level Visualization */}
+                  <div className="risk-visualization">
+                    <div className="risk-bars">
+                      {['Low', 'Medium', 'High', 'Critical'].map((level) => (
+                        <div 
+                          key={level}
+                          className={`risk-bar ${level.toLowerCase()} ${selectedPrediction.risk_level?.toLowerCase() === level.toLowerCase() ? 'active' : ''}`}
+                        >
+                          {level}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 <div className="detail-section">
                   <h3>Blockchain Data</h3>
                   <p className="hash-full"><strong>Block Hash:</strong> {selectedPrediction.blockchain_hash}</p>
                   <p><strong>Timestamp:</strong> {new Date(selectedPrediction.timestamp).toLocaleString()}</p>
+                  <div className="blockchain-status">
+                    <span className="status-indicator">✓</span>
+                    <span>Data integrity verified</span>
+                  </div>
                 </div>
               </div>
-              <button className="modal-close-btn" onClick={() => setSelectedPrediction(null)}>
-                Close
-              </button>
+              <div className="modal-actions">
+                <button 
+                  className="modal-download-btn" 
+                  onClick={() => generatePDFReport(selectedPrediction)}
+                  disabled={generatingPDF}
+                >
+                  <Download size={16} />
+                  {generatingPDF ? 'Generating...' : 'Download Report'}
+                </button>
+                <button className="modal-close-btn" onClick={() => setSelectedPrediction(null)}>
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         )}

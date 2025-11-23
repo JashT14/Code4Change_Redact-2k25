@@ -7,10 +7,8 @@ import './Navbar.css';
 const Navbar = () => {
   const navigate = useNavigate();
   const [theme, setTheme] = useState(() => {
-    // Check localStorage first, default to light mode
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) return savedTheme;
-    // Default to light mode instead of system preference
     return 'light';
   });
 
@@ -19,18 +17,15 @@ const Navbar = () => {
   const profileMenuRef = useRef(null);
 
   useEffect(() => {
-    // Apply theme to document
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
   useEffect(() => {
-    // Check auth status on mount
     setIsAuthenticated(authAPI.isAuthenticated());
   }, []);
 
   useEffect(() => {
-    // Close profile menu when clicking outside
     const handleClickOutside = (event) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
         setShowProfileMenu(false);
@@ -73,15 +68,15 @@ const Navbar = () => {
             <>
               <Link to="/dashboard" className="nav-link">
                 <LayoutDashboard size={18} />
-                Dashboard
+                <span>Dashboard</span>
               </Link>
               <Link to="/upload" className="nav-link">
                 <Upload size={18} />
-                Upload Report
+                <span>Upload Report</span>
               </Link>
               <Link to="/predict" className="nav-link">
                 <FileText size={18} />
-                New Prediction
+                <span>New Prediction</span>
               </Link>
             </>
           )}
@@ -91,7 +86,7 @@ const Navbar = () => {
             onClick={toggleTheme}
             aria-label="Toggle theme"
           >
-            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
           </button>
           
           {isAuthenticated ? (
@@ -101,15 +96,15 @@ const Navbar = () => {
                 onClick={toggleProfileMenu}
                 aria-label="Profile menu"
               >
-                <MoreVertical size={20} />
+                <MoreVertical size={18} />
               </button>
               <div className={`profile-dropdown ${showProfileMenu ? 'open' : ''}`}>
                 <button className="dropdown-item" onClick={handleProfileClick}>
-                  <LayoutDashboard size={18} />
+                  <LayoutDashboard size={16} />
                   Profile
                 </button>
                 <button className="dropdown-item" onClick={handleLogout}>
-                  <LogOut size={18} />
+                  <LogOut size={16} />
                   Logout
                 </button>
               </div>

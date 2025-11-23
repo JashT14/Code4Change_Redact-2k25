@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Health Assistant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* 3D Animated Robot */
+        .robot-3d {
+            position: fixed;
+            top: 20px;
+            left: calc(50% - 250px);
+            width: 90px;
+            height: 110px;
+            z-index: 100;
+            animation: float 1.5s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            pointer-events: all;
+        }
+
+        .robot-3d:hover {
+            transform: scale(1.1);
+        }
+
+        .robot-3d.clicked {
+            animation: celebrate 0.8s ease-in-out;
+        }
+
+        @keyframes celebrate {
+
+            0%,
+            100% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            25% {
+                transform: rotate(-15deg) scale(1.2);
+            }
+
+            50% {
+                transform: rotate(15deg) scale(1.2);
+            }
+
+            75% {
+                transform: rotate(-15deg) scale(1.2);
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Robot Head */
+        .robot-head {
+            width: 60px;
+            height: 65px;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            border-radius: 15px 15px 12px 12px;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.4);
+            animation: headTilt 2s ease-in-out infinite;
+        }
+
+        @keyframes headTilt {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-3deg);
+            }
+
+            75% {
+                transform: rotate(3deg);
+            }
+        }
+
+        /* Antenna */
+        .antenna {
+            width: 3px;
+            height: 18px;
+            background: #764ba2;
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .antenna::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: blink 1s ease-in-out infinite;
+            box-shadow: 0 0 10px #ff6b6b;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* Eyes */
+        .eyes {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 12px 0;
+        }
+
+        .eye {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pupil {
+            width: 6px;
+            height: 6px;
+            background: #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            animation: lookAround 2.5s ease-in-out infinite;
+        }
+
+        @keyframes lookAround {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            25% {
+                transform: translate(2px, 0);
+            }
+
+            50% {
+                transform: translate(0, 2px);
+            }
+
+            75% {
+                transform: translate(-2px, 0);
+            }
+        }
+
+        /* Wink Animation */
+        .eye.wink {
+            animation: winkEye 3s ease-in-out infinite;
+        }
+
+        @keyframes winkEye {
+
+            0%,
+            95%,
+            100% {
+                height: 12px;
+            }
+
+            48%,
+            52% {
+                height: 2px;
+            }
+        }
+
+        /* Mouth */
+        .mouth {
+            width: 25px;
+            height: 12px;
+            border: 2px solid white;
+            border-top: none;
+            border-radius: 0 0 25px 25px;
+            margin: 6px auto 0;
+            animation: smile 2s ease-in-out infinite;
+        }
+
+        @keyframes smile {
+
+            0%,
+            100% {
+                width: 25px;
+            }
+
+            50% {
+                width: 32px;
+            }
+        }
+
+        /* Robot Body */
+        .robot-body {
+            width: 50px;
+            height: 38px;
+            background: linear-gradient(145deg, #5a67d8, #6b46c1);
+            border-radius: 10px;
+            margin: 6px auto 0;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(90, 103, 216, 0.3);
+        }
+
+        /* Arms */
+        .arm {
+            width: 10px;
+            height: 32px;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            border-radius: 8px;
+            position: absolute;
+            top: 3px;
+        }
+
+        .arm.left {
+            left: -12px;
+            animation: waveLeft 1.5s ease-in-out infinite;
+            transform-origin: top center;
+        }
+
+        .arm.right {
+            right: -12px;
+            animation: waveRight 1.5s ease-in-out infinite 0.75s;
+            transform-origin: top center;
+        }
+
+        @keyframes waveLeft {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(-20deg);
+            }
+        }
+
+        @keyframes waveRight {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(20deg);
+            }
+        }
+
+        /* Main Chat Container */
+        .chat-container {
+            width: 400px;
+            height: 650px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform: scale(0);
+        }
+
+        @keyframes popUp {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Header */
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-text h2 {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .header-text p {
+            margin: 5px 0 0;
+            font-size: 0.8em;
+            opacity: 0.9;
+        }
+
+        /* Messages Area */
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #f9f9f9;
+            scroll-behavior: smooth;
+        }
+
+        .message-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            opacity: 0;
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-wrapper.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .bot-avatar {
+            background-color: #e0e7ff;
+            border: 1px solid #c7d2fe;
+        }
+
+        .user-avatar {
+            background-color: #d1fae5;
+            border: 1px solid #a7f3d0;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            font-size: 0.95em;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .bot-message {
+            background-color: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 20px;
+            background-color: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: 25px;
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #764ba2;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(118, 75, 162, 0.3);
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        button svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* Warning Box */
+        .warning {
+            color: #856404;
+            background-color: #fff3cd;
+            border-left: 4px solid #ffeeba;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        /* Scrollbar */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: #ddd;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 3D Animated Robot -->
+    <div class="robot-3d">
+        <div class="robot-head">
+            <div class="antenna"></div>
+            <div class="eyes">
+                <div class="eye">
+                    <div class="pupil"></div>
+                </div>
+                <div class="eye wink">
+                    <div class="pupil"></div>
+                </div>
+            </div>
+            <div class="mouth"></div>
+        </div>
+        <div class="robot-body">
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="header-text">
+                <h2>Dr. Bot 3D</h2>
+                <p>AI Health Assistant</p>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+            <!-- Chat starts empty -->
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Say 'Hi' to start..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const message = inputField.value.trim();
+
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            inputField.value = '';
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+
+                // Add bot message
+                let botText = "";
+
+                if (data.custom_message) {
+                    botText = data.custom_message;
+                } else {
+                    if (data.symptoms.length > 0) {
+                        botText += `I detected: <b>${data.symptoms.join(', ')}</b><br><br>`;
+                    }
+
+                    if (data.uncertain) {
+                        botText += `<div class="warning">⚠️ <b>Uncertain Diagnosis</b><br>${data.warning}</div><br>`;
+                        botText += `Statistical match: <b>${data.prediction}</b> (${data.confidence})`;
+                    } else if (data.prediction) {
+                        botText += `Based on this, you might have: <b>${data.prediction}</b><br>`;
+                        botText += `<small>Confidence: ${data.confidence}</small>`;
+                    } else {
+                        botText += "I couldn't understand those symptoms. Please try describing them differently.";
+                    }
+                }
+
+                addMessage(botText, 'bot', true);
+
+            } catch (error) {
+                addMessage("Sorry, something went wrong. Please try again.", 'bot');
+                console.error('Error:', error);
+            }
+        }
+
+        function addMessage(text, sender, isHtml = false) {
+            const messagesDiv = document.getElementById('chat-messages');
+
+            const wrapper = document.createElement('div');
+            wrapper.className = `message-wrapper ${sender}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${sender}-avatar`;
+            avatar.textContent = sender === 'bot' ? '🤖' : '👤';
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+
+            if (isHtml) {
+                messageDiv.innerHTML = text;
+            } else {
+                messageDiv.textContent = text;
+            }
+
+            if (sender === 'bot') {
+                wrapper.appendChild(avatar);
+                wrapper.appendChild(messageDiv);
+            } else {
+                wrapper.appendChild(messageDiv);
+                wrapper.appendChild(avatar);
+            }
+
+            messagesDiv.appendChild(wrapper);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Robot Click Interaction
+        document.addEventListener('DOMContentLoaded', function () {
+            const robot = document.querySelector('.robot-3d');
+            robot.addEventListener('click', function () {
+                robot.classList.add('clicked');
+
+                // Add a fun message
+                addMessage("You clicked me! 🎉 I'm Dr. Bot, ready to help!", 'bot', true);
+
+                // Remove the animation class after it completes
+                setTimeout(() => {
+                    robot.classList.remove('clicked');
+                }, 800);
+            });
+        });
+    </script>
+</body>
+
+</html>

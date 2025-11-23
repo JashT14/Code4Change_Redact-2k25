@@ -129,10 +129,5 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    # Run on 127.0.0.1:5000 for ML prediction API
-    print("="*50)
-    print("🤖 ML Prediction API Server Starting...")
-    print("📡 Running on: http://127.0.0.1:5000")
-    print("🔗 Endpoint: POST http://127.0.0.1:5000/predict")
-    print("="*50)
-    app.run(host='127.0.0.1', debug=True, use_reloader=False, port=5000)
+    # usage_reloader=False prevents the conflict in Jupyter
+    app.run(debug=True, use_reloader=False, port=5000)

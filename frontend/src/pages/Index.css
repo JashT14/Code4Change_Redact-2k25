@@ -2,45 +2,45 @@
 :root {
   /* Default to Light Mode Variables */
   --bg-primary: #ffffff;
-  --text-primary: #1e293b; /* Slate 800 */
-  --text-secondary: #64748b; /* Slate 500 */
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
   
   /* Blob Colors for Light Mode (Softer Pastels) */
-  --blob-1-color: rgba(45, 212, 191, 0.5); /* Teal */
-  --blob-2-color: rgba(139, 92, 246, 0.5); /* Violet */
-  --blob-3-color: rgba(59, 130, 246, 0.5); /* Blue */
+  --blob-1-color: rgba(45, 212, 191, 0.4);
+  --blob-2-color: rgba(139, 92, 246, 0.4);
+  --blob-3-color: rgba(59, 130, 246, 0.4);
   
-  /* In light mode, 'multiply' creates a watercolor effect, 'normal' is safer */
-  --aurora-blend: normal; 
-  --aurora-opacity: 0.8;
+  --aurora-blend: normal;
+  --aurora-opacity: 0.7;
   
   /* Button Styles */
   --btn-bg: rgba(0, 0, 0, 0.05);
   --btn-border: rgba(0, 0, 0, 0.1);
   --btn-text: #334155;
   --btn-hover-bg: rgba(0, 0, 0, 0.1);
+  --btn-hover-shadow: rgba(45, 212, 191, 0.3);
 }
 
 /* Dark Mode Overrides */
 [data-theme="dark"] {
-  --bg-primary: #020617; /* Deep Slate/Black */
+  --bg-primary: #020617;
   --text-primary: #ffffff;
-  --text-secondary: #94a3b8; /* Slate 400 */
+  --text-secondary: #94a3b8;
   
   /* Blob Colors for Dark Mode (Vibrant Glows) */
-  --blob-1-color: rgba(45, 212, 191, 0.8);
-  --blob-2-color: rgba(139, 92, 246, 0.8);
-  --blob-3-color: rgba(59, 130, 246, 0.6);
+  --blob-1-color: rgba(45, 212, 191, 0.6);
+  --blob-2-color: rgba(139, 92, 246, 0.6);
+  --blob-3-color: rgba(59, 130, 246, 0.5);
   
-  /* Screen blend mode makes them glow against dark backgrounds */
   --aurora-blend: screen;
-  --aurora-opacity: 0.6;
+  --aurora-opacity: 0.5;
 
   /* Button Styles */
   --btn-bg: rgba(255, 255, 255, 0.1);
   --btn-border: rgba(255, 255, 255, 0.2);
   --btn-text: #ffffff;
   --btn-hover-bg: rgba(255, 255, 255, 0.2);
+  --btn-hover-shadow: rgba(45, 212, 191, 0.4);
 }
 
 /* Reset & Base */
@@ -54,24 +54,23 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 /* Main Wrapper */
 .aurora-wrapper {
   position: relative;
   width: 100%;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
   overflow: hidden;
   background: var(--bg-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.3s ease;
+  transition: background 0.5s ease;
 }
 
 /* --- The Aurora Background Effect --- */
-
 .aurora-bg {
   position: absolute;
   top: 0;
@@ -80,18 +79,17 @@ body {
   height: 100%;
   z-index: 0;
   overflow: hidden;
-  /* Deep blur to merge shapes */
-  filter: blur(60px); 
+  filter: blur(80px);
   opacity: var(--aurora-opacity);
-  pointer-events: none; /* Allows clicking through the background */
+  pointer-events: none;
 }
 
 .aurora-blob {
   position: absolute;
   border-radius: 50%;
-  animation: drift 10s infinite ease-in-out alternate;
   mix-blend-mode: var(--aurora-blend);
   transition: background 0.5s ease;
+  will-change: transform;
 }
 
 /* Blob 1: Teal (Medical) */
@@ -101,7 +99,7 @@ body {
   width: 50vw;
   height: 50vw;
   background: radial-gradient(circle, var(--blob-1-color) 0%, rgba(0, 0, 0, 0) 70%);
-  animation-duration: 12s;
+  animation: drift-1 14s infinite ease-in-out;
 }
 
 /* Blob 2: Violet (AI) */
@@ -111,8 +109,7 @@ body {
   width: 60vw;
   height: 60vw;
   background: radial-gradient(circle, var(--blob-2-color) 0%, rgba(0, 0, 0, 0) 70%);
-  animation-duration: 15s;
-  animation-direction: alternate-reverse;
+  animation: drift-2 18s infinite ease-in-out;
 }
 
 /* Blob 3: Blue (Trust) */
@@ -122,53 +119,116 @@ body {
   width: 40vw;
   height: 40vw;
   background: radial-gradient(circle, var(--blob-3-color) 0%, rgba(0, 0, 0, 0) 70%);
-  animation-duration: 18s;
+  animation: drift-3 22s infinite ease-in-out;
 }
 
-/* Animation Keyframes */
-@keyframes drift {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(30px, -50px) scale(1.1); }
-  100% { transform: translate(-20px, 20px) scale(0.95); }
+/* Animation Keyframes - More Subtle Movement */
+@keyframes drift-1 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+  }
+  25% { 
+    transform: translate(40px, -30px) scale(1.05);
+  }
+  50% { 
+    transform: translate(20px, -60px) scale(1.1);
+  }
+  75% { 
+    transform: translate(-30px, -40px) scale(1.03);
+  }
+}
+
+@keyframes drift-2 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+  }
+  25% { 
+    transform: translate(-50px, 30px) scale(1.08);
+  }
+  50% { 
+    transform: translate(-30px, 50px) scale(0.95);
+  }
+  75% { 
+    transform: translate(20px, 30px) scale(1.02);
+  }
+}
+
+@keyframes drift-3 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  25% { 
+    transform: translate(-40px, 40px) scale(1.06) rotate(5deg);
+  }
+  50% { 
+    transform: translate(30px, -30px) scale(0.98) rotate(-5deg);
+  }
+  75% { 
+    transform: translate(-20px, -50px) scale(1.04) rotate(3deg);
+  }
 }
 
 /* --- Content Styling --- */
-
 .index-content {
   position: relative;
   z-index: 10;
   text-align: center;
-  max-width: 800px;
+  max-width: 100%;
   padding: 0 20px;
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .index-title {
-  font-size: 4rem;
+  font-size: 5rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin-bottom: 1.5rem;
   color: var(--text-primary);
   transition: color 0.3s ease;
+  animation: fadeInUp 1s ease-out 0.2s both;
 }
 
 /* Gradient Text: Remains vibrant in both themes */
 .gradient-text {
-  background: linear-gradient(to right, #2dd4bf, #3b82f6, #8b5cf6);
+  background: linear-gradient(135deg, #2dd4bf, #3b82f6, #8b5cf6);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .index-description {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 2.5rem;
-  max-width: 600px;
+  max-width: 800px;
   margin-left: auto;
   margin-right: auto;
   transition: color 0.3s ease;
+  animation: fadeInUp 1s ease-out 0.4s both;
 }
 
 /* Glassmorphism Button */
@@ -176,25 +236,110 @@ body {
   padding: 12px 32px;
   font-size: 1rem;
   font-weight: 600;
-  
-  /* Theme-aware variables */
   color: var(--btn-text);
   background: var(--btn-bg);
   border: 1px solid var(--btn-border);
-  
   border-radius: 9999px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  animation: fadeInUp 1s ease-out 0.6s both;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(45, 212, 191, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.action-button:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .action-button:hover {
   background: var(--btn-hover-bg);
-  transform: translateY(-2px);
-  /* Use the teal color for glow in both modes */
-  box-shadow: 0 0 20px rgba(45, 212, 191, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px var(--btn-hover-shadow);
   border-color: rgba(45, 212, 191, 0.5);
+}
+
+.action-button:active {
+  transform: translateY(-1px);
+}
+
+/* Floating particles effect */
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--blob-1-color);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+  animation: float-particle 10s infinite ease-in-out;
+}
+
+.particle:nth-child(1) {
+  top: 20%;
+  left: 15%;
+  animation-delay: 0s;
+  animation-duration: 12s;
+}
+
+.particle:nth-child(2) {
+  top: 60%;
+  left: 80%;
+  animation-delay: 2s;
+  animation-duration: 15s;
+}
+
+.particle:nth-child(3) {
+  top: 80%;
+  left: 20%;
+  animation-delay: 4s;
+  animation-duration: 18s;
+}
+
+.particle:nth-child(4) {
+  top: 30%;
+  left: 70%;
+  animation-delay: 1s;
+  animation-duration: 14s;
+}
+
+.particle:nth-child(5) {
+  top: 50%;
+  left: 10%;
+  animation-delay: 3s;
+  animation-duration: 16s;
+}
+
+@keyframes float-particle {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(50px, -100px) scale(1.5);
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.3;
+  }
 }
 
 /* Mobile Responsiveness */
@@ -204,5 +349,8 @@ body {
   }
   .index-description {
     font-size: 1rem;
+  }
+  .particle {
+    display: none;
   }
 }

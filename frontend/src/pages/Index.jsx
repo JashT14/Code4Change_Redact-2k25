@@ -23,6 +23,13 @@ const Index = () => {
         <div className="aurora-blob blob-3"></div>
       </div>
 
+      {/* Floating Particles */}
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+
       {/* Content Layer */}
       <div className="index-content">
         <h1 className="index-title">
